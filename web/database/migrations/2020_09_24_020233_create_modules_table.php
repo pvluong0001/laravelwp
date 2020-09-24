@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTadasTable extends Migration
+class CreateModulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class CreateTadasTable extends Migration
      */
     public function up()
     {
-        Schema::create('tadas', function (Blueprint $table) {
+        Schema::create('modules', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->comment('Module name');
+            $table->json('config');
+            $table->boolean('enabled')->default(false);
+            $table->string('hash');
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ class CreateTadasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tadas');
+        Schema::dropIfExists('modules');
     }
 }

@@ -25,6 +25,15 @@ services:
     networks:
       - laravelwp
 
+  isocket:
+    build:
+      context: docker/socket
+    networks:
+      - laravelwp
+    restart: unless-stopped
+    volumes:
+      - ./socket/:/app
+
   db:
     image: mysql:8.0
     ports:
@@ -45,6 +54,7 @@ services:
     restart: unless-stopped
     ports:
       - ${WEB_PORT}:80
+      - ${WEBSOCKET_PORT}:1357
     volumes:
       - ./web/:/var/www
       - ./docker/nginx:/etc/nginx/conf.d

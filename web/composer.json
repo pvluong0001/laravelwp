@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2.5",
         "ext-json": "*",
+        "ext-sockets": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -18,7 +19,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.4",
         "nwidart/laravel-modules": "^7.2",
-        "prettus/l5-repository": "^2.7"
+        "prettus/l5-repository": "^2.7",
+        "ramsey/uuid": "^4.1"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -45,7 +47,8 @@
         },
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "database/migrations"
         ],
         "files": [
             "app/helpers.php"

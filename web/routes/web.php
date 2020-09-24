@@ -25,7 +25,8 @@ Auth::routes([
 
 Route::group([
     'middleware' => 'auth',
-    'prefix' => 'admin'
+    'prefix' => 'admin',
+    'namespace' => 'Admin'
 ], function() {
     Route::get('home', [\App\Http\Controllers\Admin\CommonController::class, 'dashboard'])->name('home');
 
@@ -35,7 +36,6 @@ Route::group([
     ], function() {
         Route::get('menu', [\App\Http\Controllers\Admin\CommonController::class, 'menu'])->name('menu');
 
-        Route::get('plugins', [\App\Http\Controllers\Admin\CommonController::class, 'plugins'])->name('plugins.index');
-        Route::post('plugins', [\App\Http\Controllers\Admin\CommonController::class, 'createPlugin'])->name('plugins.create');
+        Route::resource('plugins', 'PluginController');
     });
 });

@@ -10,6 +10,11 @@ use Prettus\Repository\Traits\TransformableTrait;
  * Class Module.
  *
  * @package namespace App\Entities;
+ *
+ * @property string $name
+ * @property string $config JSON
+ * @property bool $enabled
+ * @property string $hash
  */
 class Module extends Model implements Transformable
 {
@@ -20,6 +25,12 @@ class Module extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['name', 'config', 'enable'];
+    protected $fillable = ['name', 'config', 'enabled', 'hash'];
 
+    protected $casts = [
+        'name'    => 'string',
+        'config'  => 'json',
+        'enabled' => 'boolean',
+        'hash'    => 'string'
+    ];
 }
