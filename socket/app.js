@@ -8,6 +8,8 @@ const wsServer = new webSocketServer({
   httpServer: server
 });
 
+const connections = {};
+
 wsServer.on('request', function (request) {
   const connection = request.accept(null, request.origin);
 
@@ -20,7 +22,37 @@ wsServer.on('request', function (request) {
   // Đây là callback quan trọng nhất,chúng ta sẽ
   // xử lý thông tin của client ở đây.
   connection.on('message', function (message) {
-    console.log(message.binaryData.toString(), '~~~~~~~~~~~~~~~~~')
+    const {type} = message;
+    let jsonMessage;
+
+    switch (type) {
+      case 'utf8':
+        jsonMessage = JSON.parse(message.utf8Data);
+
+        if(jsonMessage.type === 'initId') {
+          connections[jsonMessage.data] = connection;
+        }
+        break;
+      case 'binary':
+        jsonMessage = JSON.parse(message.binaryData.toString());
+
+        const {connection: connectionId, text} = jsonMessage;
+        console.log(connections);
+        connections[connectionId].send(JSON.stringify({
+          type: 'message',
+          text
+        }))
+
+        break;
+    }
+
+
+    // connections[id].send(JSON.stringify({
+    //   type: 'message',
+    //   text: 'Connected success'
+    // }))
+    // connection.send(message.binaryData.toString())
+    // console.log(message.binaryData.toString(), '~~~~~~~~~~~~~~~~~')
   });
 
   connection.on('close', function (connection) {

@@ -24,7 +24,8 @@ class CreatePluginRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'mimes:zip|required'
+            'file' => 'mimes:zip|required',
+            'connection' => 'string'
         ];
     }
 }
