@@ -27,12 +27,13 @@ services:
 
   isocket:
     build:
-      context: docker/socket
+      context: socket
     networks:
       - laravelwp
     restart: unless-stopped
     volumes:
       - ./socket/:/app
+      - /app/node_modules
 
   db:
     image: mysql:8.0

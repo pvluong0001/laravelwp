@@ -1,0 +1,41 @@
+[
+  {
+    "label": "General",
+    "link": "#",
+    "child": [
+      {
+        "label": "Dashboard",
+        "link": "#",
+        "icon": null
+      }
+    ]
+  },
+  {
+    "label": "Administration",
+    "link": "#",
+    "child": [
+      {
+        "label": "Team Settings",
+        "link": "#",
+        "icon": null
+      },
+      {
+        "label": "Plugins",
+        "link": "/admin/settings/plugins",
+        "icon": null
+      },
+      {
+        "label": "Settings",
+        "link": "#",
+        "icon": null,
+        "child": [
+          {
+            "label": "Menu",
+            "link": "/admin/settings/menu",
+            "icon": null
+          }
+        ]
+      }
+    ]
+  }
+]

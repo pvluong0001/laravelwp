@@ -15,7 +15,7 @@
 @include('admin.particles.header')
 
 <div class="columns is-fullheight">
-    @include('admin.particles.sidebar')
+    {!! cache('navigation') !!}
 
     <div class="column is-main-content">
         @yield('content')
