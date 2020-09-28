@@ -1,36 +1,36 @@
 [
   {
-    "label": "General",
+    "label": "general",
     "link": "#",
     "child": [
       {
-        "label": "Dashboard",
+        "label": "dashboard",
         "link": "#",
         "icon": null
       }
     ]
   },
   {
-    "label": "Administration",
+    "label": "administration",
     "link": "#",
     "child": [
       {
-        "label": "Team Settings",
+        "label": "team settings",
         "link": "#",
         "icon": null
       },
       {
-        "label": "Plugins",
+        "label": "plugins",
         "link": "/admin/settings/plugins",
         "icon": null
       },
       {
-        "label": "Settings",
+        "label": "settings",
         "link": "#",
         "icon": null,
         "child": [
           {
-            "label": "Menu",
+            "label": "menu",
             "link": "/admin/settings/menu",
             "icon": null
           }

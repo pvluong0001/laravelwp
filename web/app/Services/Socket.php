@@ -4,7 +4,7 @@ namespace App\Services;
 
 class Socket
 {
-    public function open($host = '', $port = 80, $headers = '', &$error_string = '', $timeout = 10, $ssl = false, $persistant = false, $path = '/')
+    public function open($host = '', $port = 80, $headers = '', &$error_string = '', $timeout = 3600, $ssl = false, $persistant = false, $path = '/')
     {
 
         // Generate a key (to convince server that the update is not random)
@@ -41,7 +41,7 @@ class Socket
         }
 
         // Set timeouts
-        stream_set_timeout($sp, $timeout);
+        stream_set_timeout($sp, 3600);
 
         if (!$persistant or ftell($sp) === 0) {
 

@@ -25,7 +25,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip sockets
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN cd /usr/local/etc/php/conf.d/ && \
-  echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+  echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini && \
+  echo 'set_time_limit = 600' >> /usr/local/etc/php/conf.d/docker-php-timelimit.ini
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u $uid -d /home/$user $user

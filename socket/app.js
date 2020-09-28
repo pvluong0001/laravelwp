@@ -13,7 +13,6 @@ const connections = {};
 wsServer.on('request', function (request) {
   const connection = request.accept(null, request.origin);
 
-  console.log('connected');
   connection.send(JSON.stringify({
     type: 'message',
     text: 'Connected success'
@@ -37,7 +36,6 @@ wsServer.on('request', function (request) {
         jsonMessage = JSON.parse(message.binaryData.toString());
 
         const {connection: connectionId, text} = jsonMessage;
-        console.log(connections);
         connections[connectionId].send(JSON.stringify({
           type: 'message',
           text
@@ -45,14 +43,6 @@ wsServer.on('request', function (request) {
 
         break;
     }
-
-
-    // connections[id].send(JSON.stringify({
-    //   type: 'message',
-    //   text: 'Connected success'
-    // }))
-    // connection.send(message.binaryData.toString())
-    // console.log(message.binaryData.toString(), '~~~~~~~~~~~~~~~~~')
   });
 
   connection.on('close', function (connection) {

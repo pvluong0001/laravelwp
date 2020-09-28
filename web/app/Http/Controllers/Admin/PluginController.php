@@ -98,25 +98,44 @@ class PluginController extends Controller
 
                     rename($extractPath, str_replace("{$hash}/", $moduleName, $extractPath));
 
+                    sleep(10);
+
                     $this->socket->write($socket, json_encode(
                         ['type' => 'message', 'text' => 'Installing.....', 'connection' => $connection]
                     ));
                     Artisan::call('module:update ' . $moduleName);
+
+                    logger('1');
 
                     $moduleRepository->create([
                         'name'   => $moduleName,
                         'config' => $config
                     ]);
 
+                    logger('2');
+
+
+                    if(!empty($config['menu'])) {
+                        foreach($config['menu'] as $item) {
+                            add_menu($item);
+                        }
+                    }
+
+                    logger('3');
+
+
                     $this->socket->write($socket, json_encode(
                         ['type' => 'message', 'text' => 'Install success!', 'connection' => $connection]
                     ));
+
+                    logger('done');
                 } else {
                     $this->socket->write($socket, json_encode(
                         ['type' => 'message', 'text' => 'Extracting failed!', 'connection' => $connection]
                     ));
                 }
 
+                logger('close');
                 $this->socket->close($socket);
 
                 return response()->json([

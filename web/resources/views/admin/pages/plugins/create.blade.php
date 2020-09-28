@@ -147,7 +147,10 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                error: error => {}
+                error: error => {},
+                finally: () => {
+                    $("#file").value = '';
+                }
             })
         })
     </script>

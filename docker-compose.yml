@@ -27,13 +27,13 @@ services:
 
   isocket:
     build:
-      context: socket
+      context: docker/websocket
     networks:
       - laravelwp
     restart: unless-stopped
     volumes:
       - ./socket/:/app
-      - /app/node_modules
+    command: sh /entrypoint.sh
 
   db:
     image: mysql:8.0

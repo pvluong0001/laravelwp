@@ -5,10 +5,10 @@
                 {{ $group['label'] }}
             </p>
             <ul class="menu-list">
-                @foreach($group['child'] as $item)
+                @foreach(($group['child'] ?? []) as $item)
                     <li>
                         <a href="{{ $item['link'] }}">{{ $item['label'] }}</a>
-                        @if(isset($item['child']) && $item['child'])
+                        @if(!empty($item['child']))
                             <ul>
                                 @foreach($item['child'] as $submenu)
                                     <li><a href="{{ $submenu['link'] }}">{{ $submenu['label'] }}</a></li>

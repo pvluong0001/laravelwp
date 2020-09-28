@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Services\CommonCache;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class InitConfig extends Command
 {
@@ -34,15 +34,12 @@ class InitConfig extends Command
     /**
      * Execute the console command.
      *
+     * @param CommonCache $commonCache
      * @return int
      */
-    public function handle()
+    public function handle(CommonCache $commonCache)
     {
-        Cache::add('navigation',
-            view('admin.particles.sidebar', [
-                'menu' => json_decode(file_get_contents(config_path('navigation.json')), true)
-            ])->render()
-        );
+        $commonCache->cacheNavigation();
 
         return 0;
     }
