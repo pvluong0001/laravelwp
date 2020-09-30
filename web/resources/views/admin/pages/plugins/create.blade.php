@@ -31,12 +31,26 @@
             from, to { background: transparent }
             50% { background: orange; }
         }
+
+        .module-preview-image {
+            position: relative;
+        }
+
+        .module-preview-image .plugin-checked {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 25px;
+            color: green;
+        }
     </style>
 @endpush
 
 @section('content')
     <div class="container is-fluid">
         <x-breadcrumbs></x-breadcrumbs>
+
+        <x-flash-message/>
 
         <div class="card">
             <div class="card-header">
@@ -78,10 +92,14 @@
                     @foreach($modules as $module)
                     <div class="column is-4">
                         <div class="card">
-                            <div class="card-image">
+                            <div class="card-image module-preview-image">
                                 <figure class="image is-4by3">
                                     <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
                                 </figure>
+
+                                @if($module->activated)
+                                    <i class="fas fa-check-circle plugin-checked"></i>
+                                @endif
                             </div>
                             <div class="card-content">
                                 <div class="media">
@@ -105,8 +123,16 @@
                                 </div>
 
                                 <div class="has-text-right">
-                                    <x-button text="Remove" size="is-small" class="is-danger"/>
-                                    <x-button text="Activated" size="is-small" class="is-success"/>
+                                    <form action="{{ route('settings.plugins.destroy', $module->id) }}" method="POST" class="is-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-button type="submit" text="Remove" size="is-small" class="is-danger"/>
+                                    </form>
+                                    @if($module->activated)
+                                        <x-button text="Deactivate" link="{{ route('settings.plugins.active', $module->hash) }}" size="is-small" class="is-danger"/>
+                                    @else
+                                        <x-button text="Activated" link="{{ route('settings.plugins.active', $module->hash) }}" size="is-small" class="is-success"/>
+                                    @endif
                                 </div>
                             </div>
                         </div>

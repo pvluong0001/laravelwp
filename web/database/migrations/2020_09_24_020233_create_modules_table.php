@@ -17,9 +17,10 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('name')->comment('Module name');
             $table->json('config');
-            $table->boolean('enabled')->default(false);
+            $table->boolean('activated')->default(false);
             $table->string('hash');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

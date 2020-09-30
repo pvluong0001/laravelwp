@@ -26,6 +26,10 @@ class Button extends Component
      * @var string
      */
     public $type;
+    /**
+     * @var string|null
+     */
+    public $link;
 
     /**
      * Create a new component instance.
@@ -35,14 +39,23 @@ class Button extends Component
      * @param string $id
      * @param string $size
      * @param string $type
+     * @param string $link
      */
-    public function __construct(string $text, string $class, string $id = '', string $size = '', string $type = 'button')
+    public function __construct(
+        string $text,
+        string $class,
+        string $id = '',
+        string $size = '',
+        string $type = 'button',
+        string $link = ''
+    )
     {
         $this->text = $text;
         $this->class = $class;
         $this->id = $id;
         $this->size = $size;
         $this->type = $type;
+        $this->link = $link;
     }
 
     /**

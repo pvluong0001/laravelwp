@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Entities\Module;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Plugin\CreatePluginRequest;
 use App\Repositories\ModuleRepository;
+use App\Services\Plugin\ActivePlugin;
+use App\Services\Plugin\RemovePlugin;
+use App\Services\Plugin\StoreOwnPlugin;
 use App\Services\Socket;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
 class PluginController extends Controller
 {
@@ -65,96 +67,18 @@ class PluginController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CreatePluginRequest $createPluginRequest
-     * @param ModuleRepository $moduleRepository
+     * @param StoreOwnPlugin $storeOwnPlugin
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreatePluginRequest $createPluginRequest, ModuleRepository $moduleRepository)
+    public function store(CreatePluginRequest $createPluginRequest, StoreOwnPlugin $storeOwnPlugin)
     {
-        $socket = $this->socket->open('isocket', 1357);
-        $connection = $createPluginRequest->get('connection');
+        return response()->json($storeOwnPlugin->handle($createPluginRequest));
+    }
 
-        try {
-            if ($createPluginRequest->has('file')) {
-                $this->socket->write($socket, json_encode(
-                    ['type' => 'message', 'text' => 'Prepare extracting.....', 'connection' => $connection]
-                ));
+    public function active(Module $module, ActivePlugin $activePlugin) {
+        $activePlugin->handle($module);
 
-                $file = $createPluginRequest->file('file');
-
-                $zipFile = new \ZipArchive;
-                $res = $zipFile->open($file->getRealPath());
-                if ($res === TRUE) {
-                    $hash = Str::random(12);
-
-                    $extractPath = base_path("Modules/{$hash}/");
-                    $zipFile->extractTo($extractPath);
-                    $zipFile->close();
-
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Extracting success!', 'connection' => $connection]
-                    ));
-
-                    $config = json_decode(file_get_contents($extractPath . 'module.json'), true);
-                    $moduleName = $config['name'];
-
-                    rename($extractPath, str_replace("{$hash}/", $moduleName, $extractPath));
-
-                    sleep(10);
-
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Installing.....', 'connection' => $connection]
-                    ));
-                    Artisan::call('module:update ' . $moduleName);
-
-                    logger('1');
-
-                    $moduleRepository->create([
-                        'name'   => $moduleName,
-                        'config' => $config
-                    ]);
-
-                    logger('2');
-
-
-                    if(!empty($config['menu'])) {
-                        foreach($config['menu'] as $item) {
-                            add_menu($item);
-                        }
-                    }
-
-                    logger('3');
-
-
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Install success!', 'connection' => $connection]
-                    ));
-
-                    logger('done');
-                } else {
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Extracting failed!', 'connection' => $connection]
-                    ));
-                }
-
-                logger('close');
-                $this->socket->close($socket);
-
-                return response()->json([
-                    'status' => true
-                ]);
-            }
-
-            return response()->json([
-                'status' => false
-            ]);
-        } catch (\Exception $e) {
-            logger($e->getMessage());
-
-            if($socket) {
-                $this->socket->close($socket);
-            }
-        }
-
-        return redirect()->route('');
+        return redirect()->back();
     }
 
     /**
@@ -193,12 +117,14 @@ class PluginController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param RemovePlugin $removePlugin
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(int $id, RemovePlugin $removePlugin)
     {
-        //
+        $removePlugin->handle($this->moduleRepository->find($id));
+
+        return redirect()->back();
     }
 }

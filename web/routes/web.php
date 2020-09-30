@@ -36,6 +36,7 @@ Route::group([
     ], function() {
         Route::get('menu', [\App\Http\Controllers\Admin\CommonController::class, 'menu'])->name('menu');
 
+        Route::get('plugins/active/{module:hash}', [\App\Http\Controllers\Admin\PluginController::class, 'active'])->name('plugins.active');
         Route::resource('plugins', 'PluginController');
     });
 });

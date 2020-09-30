@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -13,24 +14,24 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @property string $name
  * @property string $config JSON
- * @property bool $enabled
+ * @property bool $activated
  * @property string $hash
  */
 class Module extends Model implements Transformable
 {
-    use TransformableTrait;
+    use TransformableTrait, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'config', 'enabled', 'hash'];
+    protected $fillable = ['name', 'config', 'activated', 'hash'];
 
     protected $casts = [
         'name'    => 'string',
         'config'  => 'json',
-        'enabled' => 'boolean',
+        'activated' => 'boolean',
         'hash'    => 'string'
     ];
 }

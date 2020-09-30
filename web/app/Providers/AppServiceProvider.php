@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Flash\Flash;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
+        Flash::levels([
+            'success' => 'has-background-success has-text-white',
+            'warning' => 'has-background-warning-dark has-text-white',
+            'danger' => 'has-background-danger has-text-white',
+            'error' => 'has-background-danger has-text-white',
+        ]);
     }
 }
