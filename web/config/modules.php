@@ -26,7 +26,7 @@ return [
 
     'stubs' => [
         'enabled' => false,
-        'path' => base_path() . '/vendor/nwidart/laravel-modules/src/Commands/stubs',
+        'path' => app_path('stubs'),
         'files' => [
             'routes/web' => 'Routes/web.php',
             'routes/api' => 'Routes/api.php',
@@ -38,12 +38,14 @@ return [
             'assets/sass/app' => 'Resources/assets/sass/app.scss',
             'webpack' => 'webpack.mix.js',
             'package' => 'package.json',
+            'setup' => 'Setup.php'
         ],
         'replacements' => [
             'routes/web' => ['LOWER_NAME', 'STUDLY_NAME'],
             'routes/api' => ['LOWER_NAME'],
             'webpack' => ['LOWER_NAME'],
             'json' => ['LOWER_NAME', 'STUDLY_NAME', 'MODULE_NAMESPACE', 'PROVIDER_NAMESPACE'],
+            'setup' => ['STUDLY_NAME', 'MODULE_NAMESPACE'],
             'views/index' => ['LOWER_NAME'],
             'views/master' => ['LOWER_NAME', 'STUDLY_NAME'],
             'scaffold/config' => ['STUDLY_NAME'],
@@ -124,7 +126,7 @@ return [
             'jobs' => ['path' => 'Jobs', 'generate' => false],
             'emails' => ['path' => 'Emails', 'generate' => false],
             'notifications' => ['path' => 'Notifications', 'generate' => false],
-            'resource' => ['path' => 'Transformers', 'generate' => false],
+            'resource' => ['path' => 'Transformers', 'generate' => false]
         ],
     ],
     /*

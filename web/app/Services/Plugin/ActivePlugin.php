@@ -30,6 +30,8 @@ class ActivePlugin {
     }
 
     private function deactivate(Module $module) {
+        /** @var array $config */
+        $config = $module->config;
         $hash = $module->hash;
         $navigation = cache('navigation');
         remove_menu_by_hash($hash, $navigation);
@@ -38,6 +40,8 @@ class ActivePlugin {
 
         $module->activated = false;
         $module->save();
+
+        app($config['setupClass'])->uninstall();
 
         flash()->success('Deactivate plugin success!');
         return true;
@@ -54,6 +58,8 @@ class ActivePlugin {
         }
 
         Artisan::call('module:migrate ' . $module->name);
+
+        app($config['setupClass'])->install();
 
         flash()->success('Active plugin success!');
         $module->activated = true;

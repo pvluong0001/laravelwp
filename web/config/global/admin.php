@@ -7,5 +7,12 @@ return [
             'href'  => '/admin/home'
         ]
     ],
-    'showBreadcrumbs' => true
+    'showBreadcrumbs' => true,
+    'roles' => [
+        'superadmin',
+        'admin',
+        'customer'
+    ],
+    'permissions' => [
+    ]
 ];

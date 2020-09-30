@@ -37,3 +37,15 @@ if (!function_exists('remove_menu_by_hash')) {
         }
     }
 }
+
+if(!function_exists('add_role')) {
+    function add_role($name) {
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => $name]);
+    }
+}
+
+if(!function_exists('remove_role')) {
+    function remove_role($name) {
+        \Spatie\Permission\Models\Role::where('name', $name)->delete();
+    }
+}
