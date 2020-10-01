@@ -45,7 +45,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Modules\\": "Modules/"
+            "Modules\\": "Modules/",
+            "Lit\\Core\\": "packages/Lit/Core/src"
         },
         "classmap": [
             "database/seeds",

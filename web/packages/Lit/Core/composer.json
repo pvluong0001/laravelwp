@@ -1,0 +1,16 @@
+{
+    "name": "lit/core",
+    "description": "Core crud",
+    "require": {},
+    "authors": [
+        {
+            "email": "pvluong0001@gmail.com",
+            "name": "luonglit"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Lit\\Core\\": "src/"
+        }
+    }
+}

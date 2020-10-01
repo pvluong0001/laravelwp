@@ -39,4 +39,6 @@ Route::group([
         Route::get('plugins/active/{module:hash}', [\App\Http\Controllers\Admin\PluginController::class, 'active'])->name('plugins.active');
         Route::resource('plugins', 'PluginController');
     });
+
+    Route::crud('test', \App\Http\Controllers\Admin\TestController::class);
 });

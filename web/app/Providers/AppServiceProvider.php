@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Flash::levels([
             'success' => 'has-background-success has-text-white',
             'warning' => 'has-background-warning-dark has-text-white',
