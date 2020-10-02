@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\User;
 use Lit\Core\Http\Controllers\CoreController;
 
-class TestController extends CoreController
+class UserController extends CoreController
 {
     public function setup()
     {
-        $this->crud->setColumns([1, 2, 3, 4]);
+        $this->crud->setModel(User::class);
+        $this->crud->setLayout('layouts.admin');
+        $this->crud->setColumnsFromModel();
 
         $this->crud->setLayoutCreateGrid([
             'grid'     => [
@@ -28,7 +31,7 @@ class TestController extends CoreController
             '
         ]);
 
-        $this->crud->setColumns([
+        $this->crud->setFields([
             [
                 'name'  => 'Test',
                 'label' => 'Something',

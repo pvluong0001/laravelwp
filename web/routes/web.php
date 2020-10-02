@@ -40,5 +40,5 @@ Route::group([
         Route::resource('plugins', 'PluginController');
     });
 
-    Route::crud('test', \App\Http\Controllers\Admin\TestController::class);
+    Route::crud('user', \App\Http\Controllers\Admin\UserController::class);
 });

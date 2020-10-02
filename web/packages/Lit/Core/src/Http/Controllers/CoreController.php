@@ -3,6 +3,9 @@
 namespace Lit\Core\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
+use Lit\Core\Http\Controllers\Traits\ListCrud;
+use Lit\Core\Http\Controllers\Traits\SearchCrud;
 use Lit\Core\Services\CrudPanel;
 
 /**
@@ -13,26 +16,32 @@ use Lit\Core\Services\CrudPanel;
  */
 class CoreController extends Controller
 {
+    use ListCrud, SearchCrud;
+
     protected $crud;
     protected $data = [];
 
     public function __construct()
     {
         $this->crud = app()->make(CrudPanel::class);
+        $this->data['crud'] = $this->crud;
         $this->setup();
 
-        if($this->crud->getLayoutCreateGrid()) {
-            $this->crud->transformColumnsInGrid();
-        }
-    }
+        $classBasename = Str::of(class_basename($this))->before('Controller')->lower();
+        $this->crud->setRouteNamePrefix($classBasename);
+        $this->crud->setTitle(Str::title($classBasename));
 
-    public function index() {
-        return 'working';
+        if($this->crud->getLayoutCreateGrid()) {
+            $this->crud->transformFieldsInGrid();
+        }
+
     }
 
     public function create() {
-        $this->data['crud'] = $this->crud;
-
         return view($this->crud->getCreateView(), $this->data);
+    }
+
+    public function config() {
+        return $this->crud->toArray();
     }
 }

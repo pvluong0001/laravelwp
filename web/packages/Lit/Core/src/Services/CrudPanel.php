@@ -2,15 +2,28 @@
 
 namespace Lit\Core\Services;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+/**
+ * Class CrudPanel
+ * @package Lit\Core\Services
+ * @property Model $model
+ */
 class CrudPanel
 {
     private $createView = 'crud::create';
+    private $indexView = 'crud::index';
     private $layout = 'crud::layout';
+    private $model;
     private $columns = [];
+    private $fields = [];
     private $layoutCreateGrid = [
         'grid' => null,
         'template' => null
     ];
+    private $routeNamePrefix;
+    private $title;
 
     /**
      * @return string
@@ -84,9 +97,102 @@ class CrudPanel
         $this->layoutCreateGrid = $layoutCreateGrid;
     }
 
-    public function transformColumnsInGrid() {
-        $this->setColumns(
-            collect($this->getColumns())->groupBy('area')->toArray()
+    public function transformFieldsInGrid() {
+        $this->setFields(
+            collect($this->getFields())->groupBy('area')->toArray()
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRouteNamePrefix()
+    {
+        return $this->routeNamePrefix;
+    }
+
+    /**
+     * @param mixed $routeNamePrefix
+     */
+    public function setRouteNamePrefix($routeNamePrefix): void
+    {
+        $this->routeNamePrefix = 'crud.' . $routeNamePrefix;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndexView(): string
+    {
+        return $this->indexView;
+    }
+
+    /**
+     * @param string $indexView
+     */
+    public function setIndexView(string $indexView): void
+    {
+        $this->indexView = $indexView;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title): void
+    {
+        $this->title = Str::title($title);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param array $fields
+     */
+    public function setFields(array $fields): void
+    {
+        $this->fields = $fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param mixed $model
+     */
+    public function setModel($model): void
+    {
+        $this->model = $model;
+    }
+
+    public function setColumnsFromModel(): void {
+        $this->columns = array_map(function($field) {
+            return [
+                'type' => 'text',
+                'name' => $field
+            ];
+        }, app()->make($this->getModel())->getFillable());
+    }
+
+    public function toArray() {
+        return get_object_vars($this);
     }
 }

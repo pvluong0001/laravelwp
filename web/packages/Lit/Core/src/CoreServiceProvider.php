@@ -34,8 +34,10 @@ class CoreServiceProvider extends ServiceProvider
                     'prefix' => $prefix,
                     'middleware' => $middleware
                 ], function() use ($resourceName, $controller) {
-                    Route::get($resourceName, [$controller, 'index']);
-                    Route::get($resourceName . '/create', [$controller, 'create']);
+                    Route::get($resourceName, [$controller, 'index'])->name("crud.{$resourceName}.index");
+                    Route::get($resourceName . '/create', [$controller, 'create'])->name("crud.{$resourceName}.create");
+                    Route::get($resourceName . '/config', [$controller, 'config'])->name("crud.{$resourceName}.config");
+                    Route::post($resourceName . '/search', [$controller, 'search'])->name("crud.{$resourceName}.search");
                 });
             });
         }
@@ -50,5 +52,8 @@ class CoreServiceProvider extends ServiceProvider
         }
         // - then the stock views that come with the package, in case a published view might be missing
         $this->loadViewsFrom(realpath(__DIR__.'/resources/views/crud'), 'crud');
+
+        // - include helper
+        require_once realpath(__DIR__ . '/helpers.php');
     }
 }

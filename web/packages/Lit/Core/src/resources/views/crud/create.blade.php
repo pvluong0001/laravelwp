@@ -28,21 +28,21 @@
         <div class="grid">
             @if($grid = $crud->getLayoutCreateGrid())
                 @php
-                    $columns = $crud->getColumns();
+                    $fields = $crud->getFields();
                 @endphp
                 @foreach($grid as $gridArea => $item)
                     <div class="card area1" style="grid-area: {{ $gridArea }}">
-                        <div class="card-header has-background-info-light">
-                            <div class="card-header-title">
+                        <div class="card-header has-background-grey-dark">
+                            <div class="card-header-title has-text-white">
                                 {{ $item['title'] ?? $gridArea }}
                             </div>
                         </div>
                         <div class="card-content">
-                            @foreach(($columns[$gridArea] ?? []) as $column)
+                            @foreach(($fields[$gridArea] ?? []) as $field)
                                 <div class="field">
-                                    <label class="label">{{ $column['label'] ?? $column['name'] }}</label>
+                                    <label class="label">{{ $field['label'] ?? $field['name'] }}</label>
                                     <div class="control">
-                                        <input type="email" name="{{ $column['name'] }}" class="input">
+                                        <input type="email" name="{{ $field['name'] }}" class="input">
                                     </div>
                                 </div>
                             @endforeach
@@ -54,7 +54,7 @@
         </div>
 
         <div class="has-text-right">
-            <a href="#" class="button is-warning">Cancel</a>
+            <a href="{{ route($crud->getRouteNamePrefix() . '.index') }}" class="button is-warning">Cancel</a>
             <button class="button is-success">Create</button>
         </div>
     </div>
