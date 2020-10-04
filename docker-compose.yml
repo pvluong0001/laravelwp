@@ -25,15 +25,6 @@ services:
     networks:
       - laravelwp
 
-  isocket:
-    build:
-      context: socket
-    networks:
-      - laravelwp
-    restart: unless-stopped
-    volumes:
-      - ./socket/:/app
-
   db:
     image: mysql:8.0
     ports:

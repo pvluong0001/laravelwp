@@ -18,21 +18,15 @@ class PluginController extends Controller
      * @var ModuleRepository
      */
     private $moduleRepository;
-    /**
-     * @var Socket
-     */
-    private $socket;
 
     /**
      * PluginController constructor.
      * @param ModuleRepository $moduleRepository
-     * @param Socket $socket
      */
-    public function __construct(ModuleRepository $moduleRepository, Socket $socket)
+    public function __construct(ModuleRepository $moduleRepository)
     {
 
         $this->moduleRepository = $moduleRepository;
-        $this->socket = $socket;
     }
 
     /**

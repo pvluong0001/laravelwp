@@ -14,10 +14,12 @@ class CrudPanel
 {
     private $createView = 'crud::create';
     private $indexView = 'crud::index';
+    private $listView = 'crud::list';
     private $layout = 'crud::layout';
     private $model;
     private $columns = [];
     private $fields = [];
+    private $assets = null;
     private $layoutCreateGrid = [
         'grid' => null,
         'template' => null
@@ -194,5 +196,37 @@ class CrudPanel
 
     public function toArray() {
         return get_object_vars($this);
+    }
+
+    /**
+     * @return null
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+
+    /**
+     * @param null $assets
+     */
+    public function setAssets($assets): void
+    {
+        $this->assets = $assets;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListView(): string
+    {
+        return $this->listView;
+    }
+
+    /**
+     * @param string $listView
+     */
+    public function setListView(string $listView): void
+    {
+        $this->listView = $listView;
     }
 }

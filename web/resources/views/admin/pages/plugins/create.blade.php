@@ -148,8 +148,6 @@
     <script src="{{ asset('library/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/plugin.js') }}"></script>
     <script>
-        LPlugin.enableShowMessage($("#terminal"));
-
         const fileInput = document.querySelector('#file-js-example input[type=file]');
         fileInput.onchange = () => {
             if (fileInput.files.length > 0) {

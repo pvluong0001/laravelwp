@@ -10,35 +10,23 @@ use Illuminate\Support\Str;
 
 class StoreOwnPlugin {
     /**
-     * @var Socket
-     */
-    private $socket;
-    /**
      * @var ModuleRepository
      */
     private $moduleRepository;
 
     /**
      * StoreOwnPlugin constructor.
-     * @param Socket $socket
      * @param ModuleRepository $moduleRepository
      */
-    public function __construct(Socket $socket, ModuleRepository $moduleRepository)
+    public function __construct(ModuleRepository $moduleRepository)
     {
-        $this->socket = $socket;
         $this->moduleRepository = $moduleRepository;
     }
 
 
     public function handle(CreatePluginRequest $createPluginRequest) {
-        $socket = $this->socket->open('isocket', 1357);
-        $connection = $createPluginRequest->get('connection');
-
         try {
             if ($createPluginRequest->has('file')) {
-                $this->socket->write($socket, json_encode(
-                    ['type' => 'message', 'text' => 'Prepare extracting.....', 'connection' => $connection]
-                ));
 
                 $file = $createPluginRequest->file('file');
 
@@ -51,18 +39,11 @@ class StoreOwnPlugin {
                     $zipFile->extractTo($extractPath);
                     $zipFile->close();
 
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Extracting success!', 'connection' => $connection]
-                    ));
-
                     $config = json_decode(file_get_contents($extractPath . 'module.json'), true);
                     $moduleName = $config['name'];
 
                     rename($extractPath, str_replace("{$hash}/", $moduleName, $extractPath));
 
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Installing.....', 'connection' => $connection]
-                    ));
                     Artisan::call('module:update ' . $moduleName);
 
                     $this->moduleRepository->create([
@@ -75,17 +56,7 @@ class StoreOwnPlugin {
 //                            add_menu($item);
 //                        }
 //                    }
-
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Install success!', 'connection' => $connection]
-                    ));
-                } else {
-                    $this->socket->write($socket, json_encode(
-                        ['type' => 'message', 'text' => 'Extracting failed!', 'connection' => $connection]
-                    ));
                 }
-
-                $this->socket->close($socket);
 
                 return [
                     'status' => true
@@ -97,10 +68,6 @@ class StoreOwnPlugin {
             ];
         } catch (\Exception $e) {
             logger($e->getMessage());
-
-            if($socket) {
-                $this->socket->close($socket);
-            }
 
             return [
                 'status' => false

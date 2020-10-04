@@ -35,6 +35,14 @@ trait SearchCrud
             ])
             ->thenReturn();
 
-        return $qBuilder->getBuilder()->paginate(1);
+        $data = $qBuilder->getBuilder()->paginate(1);
+
+        if($this->crud->getAssets()) {
+            return $data;
+        }
+
+        $this->data['data'] = $data;
+
+        return view($this->crud->getListView(), $this->data)->render();
     }
 }
