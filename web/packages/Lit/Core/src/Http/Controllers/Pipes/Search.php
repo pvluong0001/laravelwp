@@ -2,16 +2,19 @@
 
 namespace Lit\Core\Http\Controllers\Pipes;
 
+use Illuminate\Support\Str;
 use Lit\Core\Http\Controllers\QBuilder;
 
 class Search implements Pipe
 {
     public function handle($request, \Closure $next)
     {
-        if($search = request()->get('s')) {
-            /** @var QBuilder $qBuilder */
-            $qBuilder = $next($request);
-            $builder = $qBuilder->getBuilder();
+        /** @var QBuilder $qBuilder */
+        $qBuilder = $next($request);
+        $searchObject = $qBuilder->request['search'];
+
+        $builder = $qBuilder->getBuilder();
+        if($search = $searchObject['value']) {
             $crud = $qBuilder->getCrudPanel();
 
             $columns = collect($crud->getColumns())->pluck('name');
@@ -20,8 +23,22 @@ class Search implements Pipe
             }
 
             return $qBuilder;
+        } else {
+            $columns = $qBuilder->request['columns'];
+            foreach($columns as $column) {
+                if(@$search = $column['search']['value']) {
+                    if($column['search']['regex'] === 'true') {
+                        $search = Str::of($search)->after('^')->before('$');
+
+                        $builder->orWhere($column['data'], '=', stripslashes($search));
+                    } else {
+                        $search = clean_string($search);
+                        $builder->orWhere($column['data'], 'LIKE', $search);
+                    }
+                }
+            }
         }
 
-        return $next($request);
+        return $qBuilder;
     }
 }

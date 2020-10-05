@@ -19,13 +19,14 @@ class CrudPanel
     private $model;
     private $columns = [];
     private $fields = [];
-    private $assets = null;
+    private $assets = 'jquery';
     private $layoutCreateGrid = [
         'grid' => null,
         'template' => null
     ];
     private $routeNamePrefix;
     private $title;
+    private $searchRequest = '\Lit\Core\Http\Requests\JqueryDataTableRequest';
 
     /**
      * @return string
@@ -186,12 +187,18 @@ class CrudPanel
     }
 
     public function setColumnsFromModel(): void {
+        /** @var Model $model */
+        $model = app()->make($this->getModel());
+        $fillable = $model->getFillable();
+        $hidden = $model->getHidden();
+
         $this->columns = array_map(function($field) {
             return [
                 'type' => 'text',
-                'name' => $field
+                'data' => $field,
+                'title' => Str::title($field)
             ];
-        }, app()->make($this->getModel())->getFillable());
+        }, array_values(array_diff($fillable, $hidden)));
     }
 
     public function toArray() {
@@ -203,7 +210,7 @@ class CrudPanel
      */
     public function getAssets()
     {
-        return $this->assets;
+        return 'list_' . $this->assets;
     }
 
     /**
@@ -228,5 +235,21 @@ class CrudPanel
     public function setListView(string $listView): void
     {
         $this->listView = $listView;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchRequest(): string
+    {
+        return $this->searchRequest;
+    }
+
+    /**
+     * @param string $searchRequest
+     */
+    public function setSearchRequest(string $searchRequest): void
+    {
+        $this->searchRequest = $searchRequest;
     }
 }

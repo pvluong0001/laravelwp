@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Lit\Core\Http\Controllers\CoreController;
 
 class UserController extends CoreController
@@ -12,6 +13,8 @@ class UserController extends CoreController
         $this->crud->setModel(User::class);
         $this->crud->setLayout('layouts.admin');
         $this->crud->setColumnsFromModel();
+
+        dd(DB::connection('mysql')->getDoctrineSchemaManager());
 
         $this->crud->setLayoutCreateGrid([
             'grid'     => [
