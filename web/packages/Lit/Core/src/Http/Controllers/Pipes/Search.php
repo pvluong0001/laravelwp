@@ -17,7 +17,8 @@ class Search implements Pipe
         if($search = $searchObject['value']) {
             $crud = $qBuilder->getCrudPanel();
 
-            $columns = collect($crud->getColumns())->pluck('name');
+            $columns = collect($crud->getColumns())->pluck('data');
+
             foreach($columns as $column) {
                 $builder->orWhere($column, 'LIKE', '%' . clean_string($search) . '%');
             }
@@ -29,11 +30,12 @@ class Search implements Pipe
                 if(@$search = $column['search']['value']) {
                     if($column['search']['regex'] === 'true') {
                         $search = Str::of($search)->after('^')->before('$');
-
                         $builder->orWhere($column['data'], '=', stripslashes($search));
                     } else {
                         $search = clean_string($search);
-                        $builder->orWhere($column['data'], 'LIKE', $search);
+                        logger($search);
+                        logger($column['data']);
+                        $builder->orWhere($column['data'], 'LIKE', '%' . clean_string($search) . '%');
                     }
                 }
             }

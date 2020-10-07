@@ -1,0 +1,15 @@
+<?php
+
+namespace $NAMESPACE$;
+
+use Lit\Core\Http\Controllers\CoreController;
+
+class $CLASS$Controller extends CoreController
+{
+    public function setup()
+    {
+        $this->crud->setModel(\$MODEL$::class);
+        $this->crud->setLayout('layouts.admin');
+        $this->crud->setColumnsFromModel();
+    }
+}

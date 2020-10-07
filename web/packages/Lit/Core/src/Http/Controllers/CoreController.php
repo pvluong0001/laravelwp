@@ -27,7 +27,7 @@ class CoreController extends Controller
         $this->data['crud'] = $this->crud;
         $this->setup();
 
-        $classBasename = Str::of(class_basename($this))->before('Controller')->lower();
+        $classBasename = Str::of(class_basename($this))->before('Controller')->lower()->plural();
         $this->crud->setRouteNamePrefix($classBasename);
         $this->crud->setTitle(Str::title($classBasename));
 

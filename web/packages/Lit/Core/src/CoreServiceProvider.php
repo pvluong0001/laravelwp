@@ -2,6 +2,7 @@
 
 namespace Lit\Core;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,7 @@ class CoreServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerRoute();
+        $this->mergeConfigFrom(__DIR__ . '/config/core.php', 'core');
     }
 
     /**
@@ -25,6 +27,13 @@ class CoreServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsWithFallbacks();
+        if(env('APP_ENV') === 'local') {
+            $this->app->singleton('databaseManager', function() {
+                return DB::connection('mysql')->getDoctrineSchemaManager();
+            });
+
+            $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        }
     }
 
     private function registerRoute() {
@@ -45,13 +54,19 @@ class CoreServiceProvider extends ServiceProvider
 
     private function loadViewsWithFallbacks() {
         $customCrudFolder = resource_path('views/vendor/lit/crud');
-
         // - first the published/overwritten views (in case they have any changes)
         if (file_exists($customCrudFolder)) {
             $this->loadViewsFrom($customCrudFolder, 'crud');
+        } else {
+            $this->loadViewsFrom(realpath(__DIR__.'/resources/views/crud'), 'crud');
         }
-        // - then the stock views that come with the package, in case a published view might be missing
-        $this->loadViewsFrom(realpath(__DIR__.'/resources/views/crud'), 'crud');
+
+        $builderFolder = resource_path('views/vendor/lit/builder');
+        if (file_exists($builderFolder)) {
+            $this->loadViewsFrom($builderFolder, 'builder');
+        } else {
+            $this->loadViewsFrom(realpath(__DIR__.'/resources/views/builder'), 'builder');
+        }
 
         // - include helper
         require_once realpath(__DIR__ . '/helpers.php');

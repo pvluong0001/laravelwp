@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Generators\ModuleGeneratorV2;
+use Illuminate\Console\Command;
+use Illuminate\Support\Str;
+use Nwidart\Modules\Contracts\ActivatorInterface;
+use Nwidart\Modules\Generators\FileGenerator;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+
+class ModuleMakeCrudCommand extends Command
+{
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'module:make-crud';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create a new crud module.';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle() : int
+    {
+        $name = $this->argument('name');
+        $success = true;
+
+        config([
+            'modules.stubs.files' => [
+                'routes/api' => 'Routes/api.php',
+                'scaffold/config' => 'Config/config.php',
+                'composer' => 'composer.json',
+                'assets/js/app' => 'Resources/assets/js/app.js',
+                'assets/sass/app' => 'Resources/assets/sass/app.scss',
+                'webpack' => 'webpack.mix.js',
+                'package' => 'package.json',
+            ]
+        ]);
+
+        config(['modules.paths.generator.controller.generate' => false]);
+
+        $code = with(new ModuleGeneratorV2($name))
+            ->setFilesystem($this->laravel['files'])
+            ->setModule($this->laravel['modules'])
+            ->setConfig($this->laravel['config'])
+            ->setActivator($this->laravel[ActivatorInterface::class])
+            ->setConsole($this)
+            ->setForce($this->option('force'))
+            ->setPlain($this->option('plain'))
+            ->setActive(!$this->option('disabled'))
+            ->generate();
+
+        if ($code === E_ERROR) {
+            $success = false;
+        }
+
+        return $success ? 0 : E_ERROR;
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return [
+            ['name', InputArgument::REQUIRED, 'The names of modules will be created.'],
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain module (without some resources).'],
+            ['disabled', 'd', InputOption::VALUE_NONE, 'Do not enable the module at creation.'],
+            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when the module already exists.'],
+        ];
+    }
+}

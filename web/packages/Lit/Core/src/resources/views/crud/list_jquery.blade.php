@@ -56,7 +56,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{route('crud.user.search')}}',
+                    url: document.querySelector('input[name="search_path"]').value,
                     type: 'POST',
                     data: {
                         _token: document.querySelector('input[name="csrf_token"]').value

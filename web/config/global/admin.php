@@ -14,5 +14,6 @@ return [
         'customer'
     ],
     'permissions' => [
-    ]
+    ],
+    'crudPrefix' => 'CRUD'
 ];

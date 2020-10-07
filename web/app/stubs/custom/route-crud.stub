@@ -1,0 +1,8 @@
+<?php
+
+Route::group([
+    'middleware' => 'auth',
+    'prefix' => 'admin'
+], function() {
+    Route::crud('$RESOURCE$', $CONTROLLER$::class);
+});

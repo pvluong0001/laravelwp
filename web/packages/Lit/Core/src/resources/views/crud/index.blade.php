@@ -8,6 +8,7 @@
         <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
         <input type="hidden" name="config_path" value="{{ route($crud->getRouteNamePrefix() . '.config') }}">
         <input type="hidden" name="data_path" value="{{ route($crud->getRouteNamePrefix() . '.search') }}">
+        <input type="hidden" name="search_path" value="{{ route($crud->getRouteNamePrefix() . '.search') }}">
         <div class="card-header">
             <div class="card-header-title">
                 <div class="title is-4">
