@@ -24,6 +24,7 @@ class DBTable
      * @var Index[]
      */
     private $indexes;
+    private $buildLink;
 
     /**
      * DBTable constructor.
@@ -76,5 +77,21 @@ class DBTable
     public function getIndexes(): array
     {
         return $this->indexes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuildLink()
+    {
+        return $this->buildLink;
+    }
+
+    /**
+     * @param mixed $buildLink
+     */
+    public function setBuildLink($buildLink): void
+    {
+        $this->buildLink = $buildLink;
     }
 }

@@ -5,6 +5,7 @@ namespace Lit\Core\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Lit\Core\Entities\Crud;
 use Nwidart\Modules\Generators\FileGenerator;
 
 class ScaffoldFromDb
@@ -21,6 +22,11 @@ class ScaffoldFromDb
             $controller = $this->_createController($model, $name);
             $this->_createRoute($tableName, $name, $controller);
         }
+
+        Crud::create([
+            'table_name' => $tableName,
+            'config' => $request->all()
+        ]);
     }
 
     private function _createModel($tableName, $name, $request) {

@@ -23,12 +23,23 @@
                     <tr>
                         <td>{{ $table->getTableName() }}</td>
                         <td>
-                            <a class="button is-success is-small" href="{{ route('builder.table', $table->getTableName()) }}">
+                            @if($buildLink = $table->getBuildLink())
+                                <a target="_blank" href="{{ $buildLink }}">Go to CRUD page</a>
+
+                                <a class="button is-danger is-small" href="{{ route('builder.table', $table->getTableName()) }}">
                                 <span class="icon">
                                     <i class="far fa-copy"></i>
                                 </span>
-                                <span>Create CRUD</span>
-                            </a>
+                                    <span>Recreate CRUD</span>
+                                </a>
+                            @else
+                                <a class="button is-success is-small" href="{{ route('builder.table', $table->getTableName()) }}">
+                                <span class="icon">
+                                    <i class="far fa-copy"></i>
+                                </span>
+                                    <span>Create CRUD</span>
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

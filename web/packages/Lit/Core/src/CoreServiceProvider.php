@@ -17,6 +17,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->registerRoute();
         $this->mergeConfigFrom(__DIR__ . '/config/core.php', 'core');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 
     /**
@@ -45,6 +46,7 @@ class CoreServiceProvider extends ServiceProvider
                 ], function() use ($resourceName, $controller) {
                     Route::get($resourceName, [$controller, 'index'])->name("crud.{$resourceName}.index");
                     Route::get($resourceName . '/create', [$controller, 'create'])->name("crud.{$resourceName}.create");
+                    Route::post($resourceName . '/create', [$controller, 'store'])->name("crud.{$resourceName}.store");
                     Route::get($resourceName . '/config', [$controller, 'config'])->name("crud.{$resourceName}.config");
                     Route::post($resourceName . '/search', [$controller, 'search'])->name("crud.{$resourceName}.search");
                 });

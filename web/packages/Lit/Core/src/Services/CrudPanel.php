@@ -3,6 +3,7 @@
 namespace Lit\Core\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
@@ -27,6 +28,8 @@ class CrudPanel
     private $routeNamePrefix;
     private $title;
     private $searchRequest = '\Lit\Core\Http\Requests\JqueryDataTableRequest';
+    private $disableRoute = [];
+    private $createRequest = Request::class;
 
     /**
      * @return string
@@ -251,5 +254,37 @@ class CrudPanel
     public function setSearchRequest(string $searchRequest): void
     {
         $this->searchRequest = $searchRequest;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisableRoute(): array
+    {
+        return $this->disableRoute;
+    }
+
+    /**
+     * @param array $disableRoute
+     */
+    public function setDisableRoute(array $disableRoute): void
+    {
+        $this->disableRoute = $disableRoute;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreateRequest(): string
+    {
+        return $this->createRequest;
+    }
+
+    /**
+     * @param string $createRequest
+     */
+    public function setCreateRequest(string $createRequest): void
+    {
+        $this->createRequest = $createRequest;
     }
 }

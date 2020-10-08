@@ -4,7 +4,9 @@ namespace Lit\Core\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Lit\Core\Entities\Crud;
 use Lit\Core\Services\DatabaseService;
+use Lit\Core\Services\DBTable;
 use Lit\Core\Services\ScaffoldFromDb;
 
 class BuilderController extends Controller
@@ -24,7 +26,15 @@ class BuilderController extends Controller
     }
 
     public function index() {
-        $tables = $this->databaseService->tables();
+        /** @var DBTable[] $tables */
+        $tables = collect($this->databaseService->tables())->keyBy(function(DBTable $DBTable) {
+            return $DBTable->getTableName();
+        })->toArray();
+
+        $cruds = Crud::all();
+        $cruds->each(function(Crud $crud) use ($tables) {
+            ($tables[$crud->table_name])->setBuildLink(route("crud.$crud->table_name.index"));
+        });
 
         return view('builder::index', compact('tables'));
     }
