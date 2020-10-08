@@ -47,8 +47,10 @@ class CoreServiceProvider extends ServiceProvider
                     Route::get($resourceName, [$controller, 'index'])->name("crud.{$resourceName}.index");
                     Route::get($resourceName . '/create', [$controller, 'create'])->name("crud.{$resourceName}.create");
                     Route::post($resourceName . '/create', [$controller, 'store'])->name("crud.{$resourceName}.store");
+                    Route::get($resourceName . '/edit/{id}', [$controller, 'edit'])->name("crud.{$resourceName}.edit");
                     Route::get($resourceName . '/config', [$controller, 'config'])->name("crud.{$resourceName}.config");
                     Route::post($resourceName . '/search', [$controller, 'search'])->name("crud.{$resourceName}.search");
+                    Route::delete($resourceName . '/delete/{id}', [$controller, 'delete'])->name("crud.{$resourceName}.delete");
                 });
             });
         }

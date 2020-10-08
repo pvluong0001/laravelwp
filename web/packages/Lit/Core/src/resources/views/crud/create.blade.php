@@ -74,7 +74,7 @@
             </div>
 
             <div class="has-text-right">
-                <a href="{{ route($crud->getRouteNamePrefix() . '.index') }}" class="button is-warning">Cancel</a>
+                <a href="{{ route($crud->getRouteNamePrefix() . '.index') }}" class="button">Cancel</a>
                 <button class="button is-success">Create</button>
             </div>
         </form>

@@ -40,6 +40,10 @@ class CoreController extends Controller
     }
 
     public function create() {
+        if($this->crud->canAccessRoute('create')) {
+            return abort(Response::HTTP_NOT_FOUND);
+        }
+
         if(method_exists($this, 'setupCreateUpdate')) {
             $this->setupCreateUpdate();
         }
@@ -52,14 +56,15 @@ class CoreController extends Controller
             $this->crud->transformFieldsInGrid();
         }
 
-        if(in_array('create', $this->crud->getDisableRoute())) {
-            return abort(Response::HTTP_NOT_FOUND);
-        }
-
         return view($this->crud->getCreateView(), $this->data);
     }
 
+
     public function store() {
+        if($this->crud->canAccessRoute('create')) {
+            return abort(Response::HTTP_NOT_FOUND);
+        }
+
         if(method_exists($this, 'setupCreate')) {
             $this->setupCreate();
         }
@@ -67,7 +72,15 @@ class CoreController extends Controller
         /** @var Request $request */
         $request = app()->make($this->crud->getCreateRequest());
 
-        dd($request->validated());
+        $data = $request->validated();
+
+        flash()->success('Create success!');
+
+        $result = app()->make($this->crud->getModel())->create($data);
+
+        $this->crud->temp = $result;
+
+        return view($this->crud->getListView());
     }
 
     public function edit() {

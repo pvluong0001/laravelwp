@@ -17,32 +17,12 @@
             </div>
         </div>
         <div class="card-content">
+            @if($crud->canAccessRoute('create'))
+                <div class="has-text-right mb-3">
+                    <a href="{{ route($crud->getRouteNamePrefix() . '.create') }}" class="button is-success is-small">Create</a>
+                </div>
+            @endif
             @include('crud::' . $crud->getAssets())
-{{--            @if($crud->getAssets())--}}
-{{--                --}}
-{{--            @else--}}
-{{--                <table class="table is-bordered is-fullwidth">--}}
-{{--                    <thead>--}}
-{{--                    <tr>--}}
-{{--                        @foreach($crud->getColumns() as $column)--}}
-{{--                            <th class="is-capitalized">{{ $column['label'] ?? $column['name'] }}</th>--}}
-{{--                        @endforeach--}}
-{{--                    </tr>--}}
-{{--                    </thead>--}}
-{{--                    <tbody id="render-box"></tbody>--}}
-{{--                </table>--}}
-{{--            @endif--}}
         </div>
     </div>
 @endsection
-
-{{--@push('after_scripts')--}}
-{{--    @if($crud->getAssets())--}}
-{{--        <script src="{{asset('js/list.js')}}"></script>--}}
-{{--    @else--}}
-{{--        <script src="{{asset('js/list-standard.js')}}"></script>--}}
-{{--        <script>--}}
-{{--            ListStandardPlugin.fetchData();--}}
-{{--        </script>--}}
-{{--    @endif--}}
-{{--@endpush--}}

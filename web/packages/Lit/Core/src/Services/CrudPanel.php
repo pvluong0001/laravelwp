@@ -30,6 +30,7 @@ class CrudPanel
     private $searchRequest = '\Lit\Core\Http\Requests\JqueryDataTableRequest';
     private $disableRoute = [];
     private $createRequest = Request::class;
+    public $temp;
 
     /**
      * @return string
@@ -103,7 +104,8 @@ class CrudPanel
         $this->layoutCreateGrid = $layoutCreateGrid;
     }
 
-    public function transformFieldsInGrid() {
+    public function transformFieldsInGrid()
+    {
         $this->setFields(
             collect($this->getFields())->groupBy('area')->toArray()
         );
@@ -189,13 +191,14 @@ class CrudPanel
         $this->model = $model;
     }
 
-    public function setColumnsFromModel(): void {
+    public function setColumnsFromModel(): void
+    {
         /** @var Model $model */
         $model = app()->make($this->getModel());
         $fillable = $model->getFillable();
         $hidden = $model->getHidden();
 
-        $this->columns = array_map(function($field) {
+        $this->columns = array_map(function ($field) {
             return [
                 'type' => 'text',
                 'data' => $field,
@@ -204,7 +207,8 @@ class CrudPanel
         }, array_values(array_diff($fillable, $hidden)));
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return get_object_vars($this);
     }
 
@@ -270,6 +274,15 @@ class CrudPanel
     public function setDisableRoute(array $disableRoute): void
     {
         $this->disableRoute = $disableRoute;
+    }
+
+    /**
+     * @param string $route
+     * @return bool
+     */
+    public function canAccessRoute(string $route): bool
+    {
+        return !in_array($route, $this->disableRoute);
     }
 
     /**
