@@ -5,6 +5,7 @@ namespace Lit\Core\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Lit\Core\Services\Traits\ViewPanel;
 
 /**
  * Class CrudPanel
@@ -13,56 +14,19 @@ use Illuminate\Support\Str;
  */
 class CrudPanel
 {
-    private $createView = 'crud::create';
-    private $indexView = 'crud::index';
-    private $listView = 'crud::list';
-    private $layout = 'crud::layout';
+    use ViewPanel;
+
     private $model;
     private $columns = [];
     private $fields = [];
-    private $assets = 'jquery';
-    private $layoutCreateGrid = [
-        'grid' => null,
-        'template' => null
-    ];
     private $routeNamePrefix;
     private $title;
     private $searchRequest = '\Lit\Core\Http\Requests\JqueryDataTableRequest';
     private $disableRoute = [];
     private $createRequest = Request::class;
+    private $updateRequest = Request::class;
     public $temp;
-
-    /**
-     * @return string
-     */
-    public function getCreateView(): string
-    {
-        return $this->createView;
-    }
-
-    /**
-     * @param string $createView
-     */
-    public function setCreateView(string $createView): void
-    {
-        $this->createView = $createView;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLayout(): string
-    {
-        return $this->layout;
-    }
-
-    /**
-     * @param string $layout
-     */
-    public function setLayout(string $layout): void
-    {
-        $this->layout = $layout;
-    }
+    private $data;
 
     /**
      * @return array
@@ -78,30 +42,6 @@ class CrudPanel
     public function setColumns(array $columns): void
     {
         $this->columns = $columns;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLayoutCreateGrid()
-    {
-        return $this->layoutCreateGrid['grid'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getLayoutCreateGridTemplate()
-    {
-        return $this->layoutCreateGrid['template'];
-    }
-
-    /**
-     * @param null[] $layoutCreateGrid
-     */
-    public function setLayoutCreateGrid(array $layoutCreateGrid): void
-    {
-        $this->layoutCreateGrid = $layoutCreateGrid;
     }
 
     public function transformFieldsInGrid()
@@ -125,22 +65,6 @@ class CrudPanel
     public function setRouteNamePrefix($routeNamePrefix): void
     {
         $this->routeNamePrefix = 'crud.' . $routeNamePrefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIndexView(): string
-    {
-        return $this->indexView;
-    }
-
-    /**
-     * @param string $indexView
-     */
-    public function setIndexView(string $indexView): void
-    {
-        $this->indexView = $indexView;
     }
 
     /**
@@ -213,38 +137,6 @@ class CrudPanel
     }
 
     /**
-     * @return null
-     */
-    public function getAssets()
-    {
-        return 'list_' . $this->assets;
-    }
-
-    /**
-     * @param null $assets
-     */
-    public function setAssets($assets): void
-    {
-        $this->assets = $assets;
-    }
-
-    /**
-     * @return string
-     */
-    public function getListView(): string
-    {
-        return $this->listView;
-    }
-
-    /**
-     * @param string $listView
-     */
-    public function setListView(string $listView): void
-    {
-        $this->listView = $listView;
-    }
-
-    /**
      * @return string
      */
     public function getSearchRequest(): string
@@ -280,9 +172,9 @@ class CrudPanel
      * @param string $route
      * @return bool
      */
-    public function canAccessRoute(string $route): bool
+    public function cannotAccessRoute(string $route): bool
     {
-        return !in_array($route, $this->disableRoute);
+        return in_array($route, $this->disableRoute);
     }
 
     /**
@@ -299,5 +191,37 @@ class CrudPanel
     public function setCreateRequest(string $createRequest): void
     {
         $this->createRequest = $createRequest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = collect($data);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdateRequest(): string
+    {
+        return $this->updateRequest;
+    }
+
+    /**
+     * @param string $updateRequest
+     */
+    public function setUpdateRequest(string $updateRequest): void
+    {
+        $this->updateRequest = $updateRequest;
     }
 }

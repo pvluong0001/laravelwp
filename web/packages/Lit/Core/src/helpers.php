@@ -12,3 +12,9 @@ if(!function_exists('getPlaceholder')) {
         return $field['placeholder'] ?? 'Enter ' . \Illuminate\Support\Str::of($field['name'])->title()->lower();
     }
 }
+
+if(!function_exists('fetchValueByField')) {
+    function fetchValueByField($data, $field) {
+        return old($field['name']) ?? @$data->get($field['name']);
+    }
+}

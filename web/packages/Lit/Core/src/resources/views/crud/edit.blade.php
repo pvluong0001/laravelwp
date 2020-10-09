@@ -22,10 +22,11 @@
 
     <div class="content-container mr-2">
         @php
-            $data = collect();
+            $data = $crud->getData();
         @endphp
-        <form action="{{ route($crud->getRouteNamePrefix() . '.store') }}" method="POST">
+        <form action="{{ route($crud->getRouteNamePrefix() . '.update', $data->get('id')) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="title is-4">
                 Title Sample
             </div>

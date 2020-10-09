@@ -177,7 +177,8 @@ return [
         App\Providers\ComponentProvider::class,
         App\Providers\ObserverServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
-        Lit\Core\CoreServiceProvider::class,
+        App\Providers\NavServiceProvider::class,
+        Lit\Core\CoreServiceProvider::class
     ],
 
     /*

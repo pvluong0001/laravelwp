@@ -5,6 +5,7 @@ namespace Lit\Core;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,17 @@ class CoreServiceProvider extends ServiceProvider
                 return DB::connection('mysql')->getDoctrineSchemaManager();
             });
 
+            add_menu([
+                'label' => 'Develop',
+                'type' => 'group',
+                'child' => [
+                    [
+                        'label' => 'Builder',
+                        'link' => '/builder'
+                    ]
+                ]
+            ], Str::uuid());
+
             $this->loadRoutesFrom(__DIR__ . '/routes.php');
         }
     }
@@ -48,6 +60,7 @@ class CoreServiceProvider extends ServiceProvider
                     Route::get($resourceName . '/create', [$controller, 'create'])->name("crud.{$resourceName}.create");
                     Route::post($resourceName . '/create', [$controller, 'store'])->name("crud.{$resourceName}.store");
                     Route::get($resourceName . '/edit/{id}', [$controller, 'edit'])->name("crud.{$resourceName}.edit");
+                    Route::put($resourceName . '/edit/{id}', [$controller, 'update'])->name("crud.{$resourceName}.update");
                     Route::get($resourceName . '/config', [$controller, 'config'])->name("crud.{$resourceName}.config");
                     Route::post($resourceName . '/search', [$controller, 'search'])->name("crud.{$resourceName}.search");
                     Route::delete($resourceName . '/delete/{id}', [$controller, 'delete'])->name("crud.{$resourceName}.delete");

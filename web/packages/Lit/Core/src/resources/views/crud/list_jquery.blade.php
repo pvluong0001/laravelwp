@@ -44,6 +44,7 @@
     <script src="{{ asset('library/jquery-tmpl/jquery.tmpl.min.js') }}"></script>
     <script src="{{ asset('library/DataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('library/DataTables/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('library/sweetalert.min.js') }}"></script>
     <script>
         $(function () {
             $.fn.dataTable.ext.classes.sPageButton = 'button mx-1'
@@ -79,7 +80,18 @@
             })
 
             $(document).on('click', '.edit-btn', function() {
-               $(this).closest('form').submit();
+                swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this record!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $(this).closest('form').submit();
+                    }
+                });
             });
 
             const table = $('#list').DataTable({

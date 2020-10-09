@@ -3,7 +3,7 @@
 if (!function_exists('add_menu')) {
     function add_menu($config, $hash)
     {
-        $navigation = cache('navigation');
+        $navigation = option('navigation');
 
         $data = \Illuminate\Support\Arr::only($config, ['label', 'link', 'child']);
         $data['hash'] = $hash;
@@ -20,7 +20,9 @@ if (!function_exists('add_menu')) {
                 break;
         }
 
-        return (bool)app()->make(\App\Services\CommonCache::class)->cacheNavigation($navigation);
+        option(['navigation' => $navigation]);
+
+//        return (bool)app()->make(\App\Services\CommonCache::class)->cacheNavigation($navigation);
     }
 }
 

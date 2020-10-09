@@ -3,13 +3,12 @@
 namespace Lit\Core\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\ViewErrorBag;
+use Lit\Core\Http\Controllers\Traits\CreateCrud;
+use Lit\Core\Http\Controllers\Traits\DeleteCrud;
 use Lit\Core\Http\Controllers\Traits\ListCrud;
 use Lit\Core\Http\Controllers\Traits\SearchCrud;
+use Lit\Core\Http\Controllers\Traits\UpdateCrud;
 use Lit\Core\Services\CrudPanel;
 
 /**
@@ -23,7 +22,7 @@ use Lit\Core\Services\CrudPanel;
  */
 class CoreController extends Controller
 {
-    use ListCrud, SearchCrud;
+    use ListCrud, SearchCrud, CreateCrud, UpdateCrud, DeleteCrud;
 
     protected $crud;
     protected $data = [];
@@ -37,56 +36,6 @@ class CoreController extends Controller
         $classBasename = Str::of(class_basename($this))->before('Controller')->lower()->plural();
         $this->crud->setRouteNamePrefix($classBasename);
         $this->crud->setTitle(Str::title($classBasename));
-    }
-
-    public function create() {
-        if($this->crud->canAccessRoute('create')) {
-            return abort(Response::HTTP_NOT_FOUND);
-        }
-
-        if(method_exists($this, 'setupCreateUpdate')) {
-            $this->setupCreateUpdate();
-        }
-
-        if(method_exists($this, 'setupCreate')) {
-            $this->setupCreate();
-        }
-
-        if($this->crud->getLayoutCreateGrid()) {
-            $this->crud->transformFieldsInGrid();
-        }
-
-        return view($this->crud->getCreateView(), $this->data);
-    }
-
-
-    public function store() {
-        if($this->crud->canAccessRoute('create')) {
-            return abort(Response::HTTP_NOT_FOUND);
-        }
-
-        if(method_exists($this, 'setupCreate')) {
-            $this->setupCreate();
-        }
-
-        /** @var Request $request */
-        $request = app()->make($this->crud->getCreateRequest());
-
-        $data = $request->validated();
-
-        flash()->success('Create success!');
-
-        $result = app()->make($this->crud->getModel())->create($data);
-
-        $this->crud->temp = $result;
-
-        return view($this->crud->getListView());
-    }
-
-    public function edit() {
-        if(method_exists($this, 'setupCreateUpdate')) {
-            $this->setupCreateUpdate();
-        }
     }
 
     public function config() {

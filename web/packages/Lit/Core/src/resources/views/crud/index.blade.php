@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="card-content">
-            @if($crud->canAccessRoute('create'))
+            @if(!$crud->cannotAccessRoute('create'))
                 <div class="has-text-right mb-3">
                     <a href="{{ route($crud->getRouteNamePrefix() . '.create') }}" class="button is-success is-small">Create</a>
                 </div>
