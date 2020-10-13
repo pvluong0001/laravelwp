@@ -71,12 +71,12 @@
                                                             {!! $columnsField !!}
                                                         </td>
                                                         <td width="250">
-                                                            <select name="createRequests[{{ $column->getName() }}]" class="rules select is-fullwidth" multiple>
+                                                            <select name="createRequests[{{ $column->getName() }}][]" class="rules select is-fullwidth" multiple>
                                                                 {!! $requestRulesHtml !!}
                                                             </select>
                                                         </td>
                                                         <td width="250">
-                                                            <select name="updateRequests[{{ $column->getName() }}]" class="rules select is-fullwidth" multiple>
+                                                            <select name="updateRequests[{{ $column->getName() }}][]" class="rules select is-fullwidth" multiple>
                                                                 {!! $requestRulesHtml !!}
                                                             </select>
                                                         </td>
@@ -104,7 +104,7 @@
                                         </div>
                                     </div>
                                     <div id="modelSettings">
-                                        <p class="subtitle is-6">Fillable</p>
+                                        <p class="subtitle is-5 has-text-black">Fillable</p>
                                         <div>
                                             <ul class="list">
                                                 @foreach($table->getColumnsExcept() as $column)
@@ -117,6 +117,24 @@
                                                 @endforeach
                                             </ul>
                                         </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="pt-3">
+                                        <p class="subtitle is-5 has-text-black">Request</p>
+                                        <ul class="list">
+                                            <li>
+                                                <label class="checkbox">
+                                                    <input type="checkbox" name="request[create]" checked value="1">
+                                                    Create Request
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label class="checkbox">
+                                                    <input type="checkbox" name="request[update]" checked value="1">
+                                                    Update Request
+                                                </label>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

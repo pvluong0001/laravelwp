@@ -19,9 +19,19 @@ class ScaffoldFromDb
 
         if($createModel) {
             $model = $this->_createModel($tableName, $name, $request);
-            $controller = $this->_createController($model, $name);
-            $this->_createRoute($tableName, $name, $controller);
+        } else {
+            $model = $request->get('model');
         }
+
+        /*
+         * create CONTROLLER
+         */
+        $controller = $this->_createController($model, $name, $request);
+
+        /*
+         * create ROUTER
+         */
+        $this->_createRoute($tableName, $name, $controller);
 
         Crud::create([
             'table_name' => $tableName,
@@ -49,7 +59,7 @@ class ScaffoldFromDb
         return $modelNamespace . "\\" . $name;
     }
 
-    private function _createController($model, $name) {
+    private function _createController($model, $name, Request $request) {
         $controllerNamespace = "Modules\\" . config('global.admin.crudPrefix') . $name . "\Http\Controllers";
         $controllerStub = app_path('stubs/custom/controller-crud.stub');
         $controllerPath = base_path("Modules/" .config('global.admin.crudPrefix'). "{$name}/Http/Controllers/{$name}Controller.php");
@@ -58,10 +68,15 @@ class ScaffoldFromDb
 
         $stubContent = file_get_contents($controllerStub);
 
+        /*
+         * create REQUEST
+         */
+        list($createRequest, $updateRequest) = $this->_createRequest($request, $name);
+
         $content = Str::of($stubContent)
             ->replace(
-                ['$NAMESPACE$', '$CLASS$', '$MODEL$'],
-                [$controllerNamespace, $name, $model]
+                ['$NAMESPACE$', '$CLASS$', '$MODEL$', '$CREATEREQUEST$', '$UPDATEREQUEST$'],
+                [$controllerNamespace, $name, $model, $createRequest, $updateRequest]
             );
 
         (new FileGenerator($controllerPath, $content))->generate();
@@ -90,5 +105,59 @@ class ScaffoldFromDb
         }
 
         return json_encode($fillable);
+    }
+
+    private function _createRequest($request, $name) {
+        $createRequest = Request::class;
+        $updateRequest = Request::class;
+
+        $fieldDefs = $request->get('fieldsDef');
+        $createRequests = $request->get('createRequests', []);
+        $updateRequests = $request->get('updateRequests', []);
+
+        $requestDef = $request->get('request', []);
+        if($requestDef) {
+            if(isset($requestDef['create'])) {
+                $createRequest = $this->_cloneRequest('create', $name, $fieldDefs, $createRequests);
+            }
+
+            if(isset($requestDef['update'])) {
+                $updateRequest = $this->_cloneRequest('update', $name, $fieldDefs, $updateRequests);
+            }
+        }
+
+        return [
+            $createRequest,
+            $updateRequest
+        ];
+    }
+
+    private function _cloneRequest($type, $name, $fieldDefs, $validationRules) {
+        $type = Str::studly($type);
+        $fieldDefs = collect($fieldDefs)->keyBy(null)->map(function($value) use ($validationRules) {
+            return $validationRules[$value] ?? ['nullable'];
+        });
+
+        $requestNamespace = "Modules\\" . config('global.admin.crudPrefix') . $name . "\Http\Requests";
+        $requestStub = app_path('stubs/custom/request-crud.stub');
+        $requestPath = base_path("Modules/" .config('global.admin.crudPrefix'). "{$name}/Http/Requests/{$type}{$name}Request.php");
+
+        $ruleString = Str::of($fieldDefs->toJson(JSON_PRETTY_PRINT))
+            ->replace(
+                ['{', '}', ':'],
+                ['[', ']', ' =>']
+            );
+
+        $stubContent = file_get_contents($requestStub);
+
+        $content = Str::of($stubContent)
+            ->replace(
+                ['$NAMESPACE$', '$TYPE$', '$NAME$', '$RULES$'],
+                [$requestNamespace, $type , $name, $ruleString]
+            );
+
+        (new FileGenerator($requestPath, $content))->generate();
+
+        return $requestNamespace . "\\" . "{$type}{$name}Request";
     }
 }

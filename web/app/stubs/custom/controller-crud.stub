@@ -12,4 +12,13 @@ class $CLASS$Controller extends CoreController
         $this->crud->setLayout('layouts.admin');
         $this->crud->setColumnsFromModel();
     }
+
+    public function setupUpdate()
+    {
+        $this->crud->setUpdateRequest(\$CREATEREQUEST$::class);
+    }
+
+    public function setupCreate() {
+        $this->crud->setCreateRequest(\$UPDATEREQUEST$::class);
+    }
 }
