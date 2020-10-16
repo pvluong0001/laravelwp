@@ -29,6 +29,7 @@ Route::group([
     'namespace' => 'Admin'
 ], function() {
     Route::get('home', [\App\Http\Controllers\Admin\CommonController::class, 'dashboard'])->name('home');
+    Route::get('test', [\App\Http\Controllers\Admin\CommonController::class, 'test'])->name('test');
 
     Route::group([
         'prefix' => 'settings',

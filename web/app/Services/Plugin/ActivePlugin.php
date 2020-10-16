@@ -33,7 +33,7 @@ class ActivePlugin {
         /** @var array $config */
         $config = $module->config;
         $hash = $module->hash;
-        $navigation = cache('navigation');
+        $navigation = option('navigation');
         remove_menu_by_hash($hash, $navigation);
 
         $this->commonCache->cacheNavigation($navigation);

@@ -35,6 +35,7 @@ class ModuleMakePluginCommand extends Command
         config([
             'modules.stubs.files' => [
                 'routes/api' => 'Routes/api.php',
+                'routes/web' => 'Routes/web.php',
                 'views/index' => 'Resources/views/index.blade.php',
                 'views/master' => 'Resources/views/layouts/master.blade.php',
                 'scaffold/config' => 'Config/config.php',

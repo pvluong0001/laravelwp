@@ -25,4 +25,8 @@ class CommonController extends Controller
 
         return view('admin.pages.menu');
     }
+
+    public function test() {
+        return view('admin.pages.test');
+    }
 }
